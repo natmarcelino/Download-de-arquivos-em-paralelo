@@ -1,0 +1,50 @@
+public class FileDownloadSimulation {
+
+    public static void main(String[] args) {
+        Runnable fileDownloaderA = new FileDownloaderA();
+        Runnable fileDownloaderB = new FileDownloaderB();
+
+        Thread threadA = new Thread(fileDownloaderA);
+        Thread threadB = new Thread(fileDownloaderB);
+
+        threadA.start();
+        threadB.start();
+
+        try {
+            threadA.join();
+            threadB.join();
+        } catch (InterruptedException e) {
+            System.err.println("Erro ao aguardar as threads: " + e.getMessage());
+        }
+
+        System.out.println("Todos os downloads concluídos!");
+    }
+}
+
+class FileDownloaderA implements Runnable {
+    @Override
+    public void run() {
+        for (int i = 1; i <= 5; i++) {
+            try {
+                System.out.println("Download do arquivo A: Parte " + i + "/5 baixada");
+                Thread.sleep(1000); // Aguardar 1 segundo
+            } catch (InterruptedException e) {
+                System.err.println("Erro na thread do arquivo A: " + e.getMessage());
+            }
+        }
+    }
+}
+
+class FileDownloaderB implements Runnable {
+    @Override
+    public void run() {
+        for (int i = 1; i <= 3; i++) {
+            try {
+                System.out.println("Download do arquivo B: Parte " + i + "/3 baixada");
+                Thread.sleep(2000); // Aguardar 2 segundos
+            } catch (InterruptedException e) {
+                System.err.println("Erro na thread do arquivo B: " + e.getMessage());
+            }
+        }
+    }
+}
